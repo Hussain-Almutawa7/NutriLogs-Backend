@@ -12,7 +12,7 @@ const PORT = process.env.PORT || "3000";
 
 // CONTROLLERS HERE
 const authCtrl = require("./controllers/auth-controller");
-
+const foodCtrl = require("./controllers/food-controller");
 
 // MIDDLEWARES HERE
 const verifyToken = require("./middleware/verify-token");
@@ -22,8 +22,11 @@ app.use(express.json());
 app.use(morgan('dev'));
 
 // AUTHENTICATION ROUTES
-app.post("/auth/sign-up", authCtrl.signUp);
-app.post("/auth/sign-in", authCtrl.signIn);
+app.post("/api/auth/sign-up", authCtrl.signUp);
+app.post("/api/auth/sign-in", authCtrl.signIn);
+
+// FOOD ROUTES
+app.post("/api/foods", verifyToken, foodCtrl.create);
 
 
 // MONGO CONNECTION
@@ -35,7 +38,7 @@ const startServer = async () => {
             console.log(`The express app is ready on port ${PORT}! 😀`);
         });
     } catch (e) {
-        console.log("Error Message:", e.message)
+        console.log("Error Message:", e.message);
     }
 }
 
