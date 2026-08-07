@@ -8,6 +8,26 @@ const userSchema = new mongoose.Schema({
     password: {
         type: String,
         required: true,
+    },
+    calorieGoal: {
+        type: Number,
+        default: 2000,
+        min: 0
+    },
+    proteinGoal: {
+        type: Number,
+        default: 150,
+        min: 0,
+    },
+    carbohydrateGoal: {
+        type: Number,
+        default: 250,
+        min: 0,
+    },
+    fatGoal: {
+        type: Number,
+        default: 70,
+        min: 0,
     }
 }, { timestamps: true });
 

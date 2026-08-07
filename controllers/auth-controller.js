@@ -47,7 +47,7 @@ const signIn = async (req, res) => {
 
         const isValidPassword = await bcrypt.compare(password, comparePassword);
 
-        if (!isValidPassword) res.status(401).json({ err: "Login Failed. Please try again." });
+        if (!isValidPassword) return res.status(401).json({ err: "Login Failed. Please try again." });
 
         // payload
         const payload = { username: userInDatabase.username, _id: userInDatabase._id };

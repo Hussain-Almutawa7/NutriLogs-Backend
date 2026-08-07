@@ -15,7 +15,7 @@ const authCtrl = require("./controllers/auth-controller");
 
 
 // MIDDLEWARES HERE
-const verifyToken = require("./middleware/verify-toke");
+const verifyToken = require("./middleware/verify-token");
 
 app.use(cors());
 app.use(express.json());
