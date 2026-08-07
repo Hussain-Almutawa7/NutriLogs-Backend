@@ -30,6 +30,7 @@ app.get("/api/foods", verifyToken, foodCtrl.index);
 app.post("/api/foods", verifyToken, foodCtrl.create);
 app.get("/api/foods/:foodId", verifyToken, foodCtrl.show);
 app.put("/api/foods/:foodId", verifyToken, foodCtrl.update);
+app.delete("/api/foods/:foodId", verifyToken, foodCtrl.deleteFood);
 
 
 // MONGO CONNECTION

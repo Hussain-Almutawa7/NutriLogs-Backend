@@ -98,9 +98,26 @@ const update = async (req, res) => {
     }
 }
 
+const deleteFood = async (req, res) => {
+    try {
+        const deletedFood = await Food.findOneAndDelete({
+            _id: req.params.foodId,
+            user: req.user._id,
+        });
+
+        if (!deletedFood) return res.status(404).json({ err: "Custom food not found" });
+
+        res.status(204).json(deletedFood); // Later I will change it 204.send but for testing pusrposes in postman will keep it like this for now
+
+    } catch (e) {
+        res.status(500).json({ err: e.message });
+    }
+}
+
 module.exports = {
     index,
     create,
     show,
     update,
+    deleteFood,
 }
