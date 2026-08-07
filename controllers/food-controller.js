@@ -43,7 +43,23 @@ const create = async (req, res) => {
     }
 }
 
+const show = async (req, res) => {
+    try {
+        const foundFood = await Food.findOne({
+            _id: req.params.foodId,
+            user: req.user._id
+        });
+
+        if (!foundFood) return res.status(404).json({ err: "Food not found" });
+
+        res.status(200).json(foundFood);
+    } catch (e) {
+        res.status(500).json({ err: e.message });
+    }
+}
+
 module.exports = {
     index,
     create,
+    show,
 }

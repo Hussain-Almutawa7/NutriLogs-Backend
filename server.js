@@ -28,6 +28,7 @@ app.post("/api/auth/sign-in", authCtrl.signIn);
 // FOOD ROUTES
 app.get("/api/foods", verifyToken, foodCtrl.index);
 app.post("/api/foods", verifyToken, foodCtrl.create);
+app.get("/api/foods/:foodId", verifyToken, foodCtrl.show);
 
 
 // MONGO CONNECTION
