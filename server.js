@@ -26,6 +26,7 @@ app.post("/api/auth/sign-up", authCtrl.signUp);
 app.post("/api/auth/sign-in", authCtrl.signIn);
 
 // FOOD ROUTES
+app.get("/api/foods", verifyToken, foodCtrl.index);
 app.post("/api/foods", verifyToken, foodCtrl.create);
 
 

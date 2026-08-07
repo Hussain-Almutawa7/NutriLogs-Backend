@@ -1,5 +1,14 @@
 const Food = require("../models/food");
 
+const index = async (req, res) => {
+    try {
+        const allFood = await Food.find({ user: req.user._id });
+        res.status(200).json(allFood);
+    } catch (e) {
+        res.status(500).json({ err: e.message });
+    }
+}
+
 const create = async (req, res) => {
     try {
 
@@ -35,5 +44,6 @@ const create = async (req, res) => {
 }
 
 module.exports = {
+    index,
     create,
 }
