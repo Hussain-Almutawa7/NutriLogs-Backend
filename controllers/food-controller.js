@@ -113,7 +113,7 @@ const deleteFood = async (req, res) => {
 
         if (!deletedFood) return res.status(404).json({ err: "Food not found" });
 
-        res.status(204).json(deletedFood); // Later I will change it 204.send but for testing pusrposes in postman will keep it like this for now
+        res.status(204).send();
 
     } catch (e) {
         res.status(500).json({ err: e.message });

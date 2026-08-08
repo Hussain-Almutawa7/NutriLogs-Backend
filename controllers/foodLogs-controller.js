@@ -150,9 +150,25 @@ const update = async (req, res) => {
     }
 }
 
+const deleteEntry = async (req, res) => {
+    try {
+        const deletedEntry = await FoodLogEntry.findOneAndDelete({
+            _id: req.params.entryId,
+            user: req.user._id,
+        });
+
+        if (!deletedEntry) return res.status(404).json({ err: "Entry not found" });
+
+        res.status(204).send();
+    } catch (e) {
+        res.status(500).json({ err: e.message });
+    }
+}
+
 module.exports = {
     index,
     create,
     show,
     update,
+    deleteEntry,
 }
