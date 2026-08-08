@@ -28,12 +28,13 @@ const create = async (req, res) => {
         if (!food) return res.status(404).json({ err: "Food not found" });
 
         const consumedAmount = Number(req.body.consumedAmount);
+        const consumedUnit = req.body.consumedUnit;
 
-        // isFinite is something new, it checks if a value is not a regular, finite number
+        // isFinite is something new, it checks NaN Infinity and -Infinity
         if (!Number.isFinite(consumedAmount) || consumedAmount <= 0) return res.status(400).json({ err: "Consumed amount must be greater than 0" });
 
         // Maybe later I will handle unit conversion but for now will keep it simple
-        if (req.body.consumedUnit !== food.servingUnit) return res.status(400).json({ err: `Consumed unit must be ${food.servingUnit}` });
+        if (consumedUnit !== food.servingUnit) return res.status(400).json({ err: `Consumed unit must be ${food.servingUnit}` });
 
         const multiplier = consumedAmount / food.servingAmount;
 
@@ -56,7 +57,7 @@ const create = async (req, res) => {
             time: req.body.time,
 
             consumedAmount,
-            consumedUnit: req.body.consumedUnit,
+            consumedUnit,
 
             baseAmount: food.servingAmount,
             baseUnit: food.servingUnit,
@@ -96,8 +97,62 @@ const show = async (req, res) => {
     }
 }
 
+const update = async (req, res) => {
+    try {
+        const foundEntry = await FoodLogEntry.findOne({
+            _id: req.params.entryId,
+            user: req.user._id,
+        });
+
+        if (!foundEntry) return res.status(404).json({ err: "Entry not found" });
+
+        const consumedAmount = Number(req.body.consumedAmount);
+        const consumedUnit = req.body.consumedUnit;
+
+        // isFinite is something new, it checks NaN Infinity and -Infinity
+        if (!Number.isFinite(consumedAmount) || consumedAmount <= 0) return res.status(400).json({ err: "Consumed amount must be greater than 0" });
+
+        // Maybe later I will handle unit conversion but for now will keep it simple
+        if (consumedUnit !== foundEntry.baseUnit) return res.status(400).json({ err: `Consumed unit must be ${foundEntry.baseUnit}` });
+
+        const multiplier = consumedAmount / foundEntry.baseAmount;
+
+        const totalCalories = foundEntry.caloriesPerBase * multiplier;
+
+        const totalProtein = foundEntry.proteinPerBase === null ? null : foundEntry.proteinPerBase * multiplier;
+        const totalCarbohydrates = foundEntry.carbohydratesPerBase === null ? null : foundEntry.carbohydratesPerBase * multiplier;
+        const totalFat = foundEntry.fatPerBase === null ? null : foundEntry.fatPerBase * multiplier;
+
+        const entryData = {
+            date: req.body.date,
+            time: req.body.time,
+
+            consumedAmount,
+            consumedUnit,
+
+            totalCalories,
+            totalProtein,
+            totalCarbohydrates,
+            totalFat,
+        }
+
+        const updatedEntry = await FoodLogEntry.findOneAndUpdate({
+            _id: req.params.entryId,
+            user: req.user._id,
+        }, entryData, { returnDocument: "after", runValidators: true });
+
+        if (!updatedEntry) return res.status(404).json({ err: "Entry not found" });
+
+        res.status(200).json(updatedEntry);
+
+    } catch (e) {
+        res.status(500).json({ err: e.message });
+    }
+}
+
 module.exports = {
     index,
     create,
     show,
+    update,
 }

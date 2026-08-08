@@ -38,6 +38,7 @@ app.patch("/api/foods/:foodId/favorite", verifyToken, foodCtrl.toggleFavorite); 
 app.get("/api/food-logs", verifyToken, foodLogCtrl.index);
 app.post("/api/food-logs", verifyToken, foodLogCtrl.create);
 app.get("/api/food-logs/:entryId", verifyToken, foodLogCtrl.show);
+app.put("/api/food-logs/:entryId", verifyToken, foodLogCtrl.update);
 
 // MONGO CONNECTION
 const startServer = async () => {
