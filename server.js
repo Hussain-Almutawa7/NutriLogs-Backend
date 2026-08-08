@@ -13,6 +13,7 @@ const PORT = process.env.PORT || "3000";
 // CONTROLLERS HERE
 const authCtrl = require("./controllers/auth-controller");
 const foodCtrl = require("./controllers/food-controller");
+const foodLogCtrl = require("./controllers/foodLogs-controller");
 
 // MIDDLEWARES HERE
 const verifyToken = require("./middleware/verify-token");
@@ -31,8 +32,10 @@ app.post("/api/foods", verifyToken, foodCtrl.create);
 app.get("/api/foods/:foodId", verifyToken, foodCtrl.show);
 app.put("/api/foods/:foodId", verifyToken, foodCtrl.update);
 app.delete("/api/foods/:foodId", verifyToken, foodCtrl.deleteFood);
-app.patch("/api/foods/:foodId/favorite", verifyToken, foodCtrl.updateFavorite); // PUT will work but I used patch since it is the best practice for partial updates
+app.patch("/api/foods/:foodId/favorite", verifyToken, foodCtrl.toggleFavorite); // PUT will work but I used patch since it is the best practice for partial updates
 
+// FOOD LOGS ROUTES
+app.post("/api/food-logs", verifyToken, foodLogCtrl.create);
 
 // MONGO CONNECTION
 const startServer = async () => {
