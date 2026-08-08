@@ -24,12 +24,16 @@ const create = async (req, res) => {
 
         const foodData = {
             user: req.user._id,
+
             externalId: null,
             source: "custom",
+
             name: req.body.name,
             brand: req.body.brand,
+
             servingAmount: req.body.servingAmount,
             servingUnit: req.body.servingUnit,
+
             calories: req.body.calories,
             protein: req.body.protein,
             carbohydrates: req.body.carbohydrates,
@@ -75,8 +79,10 @@ const update = async (req, res) => {
         const foodData = {
             name: req.body.name,
             brand: req.body.brand,
+
             servingAmount: req.body.servingAmount,
             servingUnit: req.body.servingUnit,
+            
             calories: req.body.calories,
             protein: req.body.protein,
             carbohydrates: req.body.carbohydrates,

@@ -35,6 +35,7 @@ app.delete("/api/foods/:foodId", verifyToken, foodCtrl.deleteFood);
 app.patch("/api/foods/:foodId/favorite", verifyToken, foodCtrl.toggleFavorite); // PUT will work but I used patch since it is the best practice for partial updates
 
 // FOOD LOGS ROUTES
+app.get("/api/food-logs", verifyToken, foodLogCtrl.index);
 app.post("/api/food-logs", verifyToken, foodLogCtrl.create);
 
 // MONGO CONNECTION

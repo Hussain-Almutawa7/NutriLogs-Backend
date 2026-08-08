@@ -1,6 +1,23 @@
 const Food = require("../models/food");
 const FoodLogEntry = require("../models/foodLogEntry");
 
+const index = async (req, res) => {
+    try {
+
+        if (!req.query.date) return res.status(400).json({ err: "Date is required" });
+
+        const allFoodLogEntry = await FoodLogEntry.find({
+            user: req.user._id,
+            date: req.query.date,
+        }).sort({ time: 1 });
+
+        res.status(200).json(allFoodLogEntry);
+
+    } catch (e) {
+        res.status(500).json({ err: e.message });
+    }
+}
+
 const create = async (req, res) => {
     try {
         const food = await Food.findOne({
@@ -28,21 +45,27 @@ const create = async (req, res) => {
 
         const foodLogData = {
             user: req.user._id,
+
             food: food._id,
             source: food.source,
             externalId: food.externalId,
             foodName: food.name,
             brand: food.brand,
+
             date: req.body.date,
             time: req.body.time,
+
             consumedAmount,
             consumedUnit: req.body.consumedUnit,
+
             baseAmount: food.servingAmount,
             baseUnit: food.servingUnit,
+
             caloriesPerBase: food.calories,
             proteinPerBase: food.protein,
             carbohydratesPerBase: food.carbohydrates,
             fatPerBase: food.fat,
+
             totalCalories,
             totalProtein,
             totalCarbohydrates,
@@ -59,5 +82,6 @@ const create = async (req, res) => {
 }
 
 module.exports = {
+    index,
     create,
 }
