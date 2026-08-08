@@ -37,6 +37,7 @@ app.patch("/api/foods/:foodId/favorite", verifyToken, foodCtrl.toggleFavorite); 
 // FOOD LOGS ROUTES
 app.get("/api/food-logs", verifyToken, foodLogCtrl.index);
 app.post("/api/food-logs", verifyToken, foodLogCtrl.create);
+app.get("/api/food-logs/:entryId", verifyToken, foodLogCtrl.show);
 
 // MONGO CONNECTION
 const startServer = async () => {

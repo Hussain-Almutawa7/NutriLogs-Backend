@@ -81,7 +81,23 @@ const create = async (req, res) => {
     }
 }
 
+const show = async (req, res) => {
+    try {
+        const foundEntry = await FoodLogEntry.findOne({
+            _id: req.params.entryId,
+            user: req.user._id,
+        });
+
+        if (!foundEntry) return res.status(404).json({ err: "Entry not found" });
+
+        res.status(200).json(foundEntry);
+    } catch (e) {
+        res.status(500).json({ err: e.message });
+    }
+}
+
 module.exports = {
     index,
     create,
+    show,
 }
