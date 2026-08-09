@@ -44,6 +44,7 @@ function getNutrientFoodDetailsValues(nutrients, nutrientId) {
 function normalizedSearchFood(food) {
     return {
         externalId: String(food.fdcId),
+        source: "api",
         name: food.description,
         brand: food.brandOwner || null,
         dataType: food.dataType,
@@ -59,12 +60,13 @@ function normalizedSearchFood(food) {
 function normalizedFoodDetails(food) {
     return {
         externalId: String(food.fdcId),
+        source: "api",
         name: food.description,
         brand: food.brandOwner || null,
         dataType: food.dataType,
 
         servingAmount: 100,
-        servingUnit: food.servingSizeUnit,
+        servingUnit: "g",
 
         calories: getNutrientFoodDetailsValues(food.foodNutrients, 1008),
         protein: getNutrientFoodDetailsValues(food.foodNutrients, 1003),

@@ -1,5 +1,6 @@
 const Food = require("../models/food");
 const FoodLogEntry = require("../models/foodLogEntry");
+const nutritionService = require("../services/nutritionService");
 
 const index = async (req, res) => {
     try {
@@ -20,12 +21,25 @@ const index = async (req, res) => {
 
 const create = async (req, res) => {
     try {
-        const food = await Food.findOne({
-            _id: req.body.foodId,
-            user: req.user._id,
-        });
+        let food;
+        let foodId = null;
 
-        if (!food) return res.status(404).json({ err: "Food not found" });
+        if (req.body.foodId) {
+            food = await Food.findOne({
+                _id: req.body.foodId,
+                user: req.user._id,
+            });
+
+            if (!food) return res.status(404).json({ err: "Food not found" });
+
+            foodId = food._id;
+
+        } else if (req.body.externalId) {
+            food = await nutritionService.getFoodById(req.body.externalId);
+        } else {
+            return res.status(400).json({ err: "Food ID or external ID is required" });
+        }
+
 
         const consumedAmount = Number(req.body.consumedAmount);
         const consumedUnit = req.body.consumedUnit;
@@ -47,7 +61,7 @@ const create = async (req, res) => {
         const foodLogData = {
             user: req.user._id,
 
-            food: food._id,
+            food: foodId,
             source: food.source,
             externalId: food.externalId,
             foodName: food.name,
@@ -67,10 +81,10 @@ const create = async (req, res) => {
             carbohydratesPerBase: food.carbohydrates,
             fatPerBase: food.fat,
 
-            totalCalories,
-            totalProtein,
-            totalCarbohydrates,
-            totalFat,
+            totalCalories: totalCalories.toFixed(0),
+            totalProtein: totalProtein.toFixed(1),
+            totalCarbohydrates: totalCarbohydrates.toFixed(1),
+            totalFat: totalFat.toFixed(1),
         }
 
         const createdFoodLogEntry = await FoodLogEntry.create(foodLogData);
@@ -130,10 +144,10 @@ const update = async (req, res) => {
             consumedAmount,
             consumedUnit,
 
-            totalCalories,
-            totalProtein,
-            totalCarbohydrates,
-            totalFat,
+            totalCalories: totalCalories.toFixed(0),
+            totalProtein: totalProtein.toFixed(1),
+            totalCarbohydrates: totalCarbohydrates.toFixed(1),
+            totalFat: totalFat.toFixed(1),
         }
 
         const updatedEntry = await FoodLogEntry.findOneAndUpdate({
