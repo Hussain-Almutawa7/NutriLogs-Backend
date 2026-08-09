@@ -83,10 +83,10 @@ const create = async (req, res) => {
             carbohydratesPerBase: food.carbohydrates,
             fatPerBase: food.fat,
 
-            totalCalories: totalCalories.toFixed(0),
-            totalProtein: totalProtein.toFixed(1),
-            totalCarbohydrates: totalCarbohydrates.toFixed(1),
-            totalFat: totalFat.toFixed(1),
+            totalCalories,
+            totalProtein,
+            totalCarbohydrates,
+            totalFat,
         }
 
         const createdFoodLogEntry = await FoodLogEntry.create(foodLogData);
@@ -146,10 +146,10 @@ const update = async (req, res) => {
             consumedAmount,
             consumedUnit,
 
-            totalCalories: totalCalories.toFixed(0),
-            totalProtein: totalProtein.toFixed(1),
-            totalCarbohydrates: totalCarbohydrates.toFixed(1),
-            totalFat: totalFat.toFixed(1),
+            totalCalories,
+            totalProtein,
+            totalCarbohydrates,
+            totalFat,
         }
 
         const updatedEntry = await FoodLogEntry.findOneAndUpdate({
@@ -216,6 +216,27 @@ const summary = async (req, res) => {
             }
         ]);
 
+        const weekData = [];
+
+        const currentDate = new Date(startDate);
+        const lastDate = new Date(endDate);
+
+        while (currentDate <= lastDate) {
+            const date = currentDate.toISOString().split("T")[0];
+
+            const foundDay = summaryData.find(day => day._id === date);
+
+            weekData.push({
+                date,
+                calories: foundDay?.calories ?? 0,
+                protein: foundDay?.protein ?? 0,
+                carbohydrates: foundDay?.carbohydrates ?? 0,
+                fat: foundDay?.fat ?? 0
+            })
+
+            currentDate.setUTCDate(currentDate.getUTCDate() + 1);
+        }
+
         const user = await User.findById(req.user._id);
         const today = req.query.today;
         const todayDateMacros = summaryData.find(day => day._id === today);
@@ -245,7 +266,7 @@ const summary = async (req, res) => {
                 consumed: todayConsumed,
                 remaining,
             },
-            week: summaryData,
+            week: weekData,
         });
 
     } catch (e) {
