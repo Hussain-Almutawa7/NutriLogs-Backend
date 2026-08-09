@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const User = require("../models/user");
 const Food = require("../models/food");
 const FoodLogEntry = require("../models/foodLogEntry");
 const nutritionService = require("../services/nutritionService");
@@ -201,7 +202,7 @@ const summary = async (req, res) => {
             {
                 $group: {
                     _id: "$date",
-                    calories: { sum: "$totalCalories" },
+                    calories: { $sum: "$totalCalories" },
                     protein: { $sum: "$totalProtein" },
                     carbohydrates: { $sum: "$totalCarbohydrates" },
                     fat: { $sum: "$totalFat" }
@@ -215,7 +216,37 @@ const summary = async (req, res) => {
             }
         ]);
 
-        res.status(200).json(summaryData);
+        const user = await User.findById(req.user._id);
+        const today = req.query.today;
+        const todayDateMacros = summaryData.find(day => day._id === today);
+
+        const todayConsumed = {
+            calories: todayDateMacros?.calories || 0,
+            protein: todayDateMacros?.protein || 0,
+            carbohydrates: todayDateMacros?.carbohydrates || 0,
+            fat: todayDateMacros?.fat || 0,
+        }
+
+        const remaining = {
+            calories: user.calorieGoal - todayConsumed.calories,
+            protein: user.proteinGoal - todayConsumed.protein,
+            carbohydrates: user.carbohydrateGoal - todayConsumed.carbohydrates,
+            fat: user.fatGoal - todayConsumed.fat,
+        }
+
+        res.status(200).json({
+            goals: {
+                calories: user.calorieGoal,
+                protein: user.proteinGoal,
+                carbohydrates: user.carbohydrateGoal,
+                fat: user.fatGoal
+            },
+            today: {
+                consumed: todayConsumed,
+                remaining,
+            },
+            week: summaryData,
+        });
 
     } catch (e) {
         res.status(500).json({ err: e.message });
