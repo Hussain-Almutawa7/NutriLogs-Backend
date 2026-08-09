@@ -39,6 +39,7 @@ app.patch("/api/foods/:foodId/favorite", verifyToken, foodCtrl.toggleFavorite); 
 // FOOD LOGS ROUTES
 app.get("/api/food-logs", verifyToken, foodLogCtrl.index);
 app.post("/api/food-logs", verifyToken, foodLogCtrl.create);
+app.get("/api/food-logs/summary", verifyToken, foodLogCtrl.summary);
 app.get("/api/food-logs/:entryId", verifyToken, foodLogCtrl.show);
 app.put("/api/food-logs/:entryId", verifyToken, foodLogCtrl.update);
 app.delete("/api/food-logs/:entryId", verifyToken, foodLogCtrl.deleteEntry);

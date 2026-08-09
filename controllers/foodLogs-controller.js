@@ -1,3 +1,4 @@
+const mongoose = require("mongoose");
 const Food = require("../models/food");
 const FoodLogEntry = require("../models/foodLogEntry");
 const nutritionService = require("../services/nutritionService");
@@ -179,10 +180,53 @@ const deleteEntry = async (req, res) => {
     }
 }
 
+const summary = async (req, res) => {
+    try {
+        const startDate = req.query.startDate;
+        const endDate = req.query.endDate;
+
+        if (!startDate || !endDate) return res.status(400).json({ err: "Start and end date are required" });
+
+        const summaryData = await FoodLogEntry.aggregate([
+            {
+                $match: {
+                    user: new mongoose.Types.ObjectId(req.user._id),
+                    date: {
+                        $gte: startDate,
+                        $lte: endDate,
+                    }
+                }
+            },
+
+            {
+                $group: {
+                    _id: "$date",
+                    calories: { sum: "$totalCalories" },
+                    protein: { $sum: "$totalProtein" },
+                    carbohydrates: { $sum: "$totalCarbohydrates" },
+                    fat: { $sum: "$totalFat" }
+                }
+            },
+
+            {
+                $sort: {
+                    _id: 1,
+                }
+            }
+        ]);
+
+        res.status(200).json(summaryData);
+
+    } catch (e) {
+        res.status(500).json({ err: e.message });
+    }
+}
+
 module.exports = {
     index,
     create,
     show,
     update,
     deleteEntry,
+    summary,
 }
