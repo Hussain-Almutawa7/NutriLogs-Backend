@@ -1,4 +1,5 @@
 const Food = require("../models/food");
+const nutritionService = require("../services/nutritionService");
 
 const index = async (req, res) => {
     try {
@@ -82,7 +83,7 @@ const update = async (req, res) => {
 
             servingAmount: req.body.servingAmount,
             servingUnit: req.body.servingUnit,
-            
+
             calories: req.body.calories,
             protein: req.body.protein,
             carbohydrates: req.body.carbohydrates,
@@ -141,6 +142,55 @@ const toggleFavorite = async (req, res) => {
     }
 }
 
+const importFoodFromApi = async (req, res) => {
+    try {
+        const externalId = req.body.externalId
+
+        if (!externalId) return res.status(400).json({ err: "Api Food not found" });
+
+        const foundFood = await Food.findOne({
+            externalId,
+            user: req.user._id,
+            source: "api",
+        });
+
+        if (foundFood) {
+            foundFood.isFavorite = true;
+            await foundFood.save();
+            return res.status(200).json(foundFood);
+        }
+
+        const apiFood = await nutritionService.getFoodById(externalId);
+
+        const foodData = {
+            user: req.user._id,
+
+            externalId,
+            source: "api",
+
+            name: apiFood.name,
+            brand: apiFood.brand,
+
+            servingAmount: apiFood.servingAmount,
+            servingUnit: apiFood.servingUnit,
+
+            calories: apiFood.calories,
+            protein: apiFood.protein,
+            carbohydrates: apiFood.carbohydrates,
+            fat: apiFood.fat,
+
+            isFavorite: true,
+
+        }
+
+        const createdApiFood = await Food.create(foodData);
+        res.status(201).json(createdApiFood);
+
+    } catch (e) {
+        res.status(500).json({ err: e.message });
+    }
+}
+
 module.exports = {
     index,
     create,
@@ -148,4 +198,5 @@ module.exports = {
     update,
     deleteFood,
     toggleFavorite,
+    importFoodFromApi,
 }

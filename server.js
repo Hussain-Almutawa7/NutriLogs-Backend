@@ -30,6 +30,7 @@ app.post("/api/auth/sign-in", authCtrl.signIn);
 // FOOD ROUTES
 app.get("/api/foods", verifyToken, foodCtrl.index);
 app.post("/api/foods", verifyToken, foodCtrl.create);
+app.post("/api/foods/import", verifyToken, foodCtrl.importFoodFromApi);
 app.get("/api/foods/:foodId", verifyToken, foodCtrl.show);
 app.put("/api/foods/:foodId", verifyToken, foodCtrl.update);
 app.delete("/api/foods/:foodId", verifyToken, foodCtrl.deleteFood);
@@ -45,6 +46,7 @@ app.delete("/api/food-logs/:entryId", verifyToken, foodLogCtrl.deleteEntry);
 // API ROUTES
 app.get("/api/nutrition/search", verifyToken, nutritionCtrl.search);
 app.get("/api/nutrition/:externalId", verifyToken, nutritionCtrl.show);
+
 
 // MONGO CONNECTION
 const startServer = async () => {
