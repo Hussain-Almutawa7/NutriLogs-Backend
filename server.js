@@ -14,6 +14,7 @@ const PORT = process.env.PORT || "3000";
 const authCtrl = require("./controllers/auth-controller");
 const foodCtrl = require("./controllers/food-controller");
 const foodLogCtrl = require("./controllers/foodLogs-controller");
+const nutritionCtrl = require("./controllers/nutrition-controller");
 
 // MIDDLEWARES HERE
 const verifyToken = require("./middleware/verify-token");
@@ -40,6 +41,9 @@ app.post("/api/food-logs", verifyToken, foodLogCtrl.create);
 app.get("/api/food-logs/:entryId", verifyToken, foodLogCtrl.show);
 app.put("/api/food-logs/:entryId", verifyToken, foodLogCtrl.update);
 app.delete("/api/food-logs/:entryId", verifyToken, foodLogCtrl.deleteEntry);
+
+// SEARCH ROUTES
+app.get("/api/nutrition/search", verifyToken, nutritionCtrl.search);
 
 // MONGO CONNECTION
 const startServer = async () => {
