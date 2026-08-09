@@ -42,8 +42,9 @@ app.get("/api/food-logs/:entryId", verifyToken, foodLogCtrl.show);
 app.put("/api/food-logs/:entryId", verifyToken, foodLogCtrl.update);
 app.delete("/api/food-logs/:entryId", verifyToken, foodLogCtrl.deleteEntry);
 
-// SEARCH ROUTES
+// API ROUTES
 app.get("/api/nutrition/search", verifyToken, nutritionCtrl.search);
+app.get("/api/nutrition/:externalId", verifyToken, nutritionCtrl.show);
 
 // MONGO CONNECTION
 const startServer = async () => {

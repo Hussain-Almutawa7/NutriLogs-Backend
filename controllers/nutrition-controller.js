@@ -15,6 +15,19 @@ const search = async (req, res) => {
     }
 }
 
+const show = async (req, res) => {
+    try {
+        const externalId = req.params.externalId;
+
+        const result = await nutritionService.getFoodById(externalId);
+
+        res.status(200).json(result);
+    } catch (e) {
+        res.status(500).json({ err: e.message });
+    }
+}
+
 module.exports = {
     search,
+    show,
 }
