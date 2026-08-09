@@ -11,6 +11,7 @@ const morgan = require('morgan');
 const PORT = process.env.PORT || "3000";
 
 // CONTROLLERS HERE
+const userCtrl = require("./controllers/user-controller");
 const authCtrl = require("./controllers/auth-controller");
 const foodCtrl = require("./controllers/food-controller");
 const foodLogCtrl = require("./controllers/foodLogs-controller");
@@ -26,6 +27,9 @@ app.use(morgan('dev'));
 // AUTHENTICATION ROUTES
 app.post("/api/auth/sign-up", authCtrl.signUp);
 app.post("/api/auth/sign-in", authCtrl.signIn);
+
+//USER ROUTES
+app.patch("/api/users/goals", verifyToken, userCtrl.updateGoals);
 
 // FOOD ROUTES
 app.get("/api/foods", verifyToken, foodCtrl.index);
