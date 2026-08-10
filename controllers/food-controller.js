@@ -3,7 +3,22 @@ const nutritionService = require("../services/nutritionService");
 
 const index = async (req, res) => {
     try {
-        const allFood = await Food.find({ user: req.user._id });
+        const filter = {
+            user: req.user._id,
+        }
+
+        if (req.query.favorite === "true") {
+            filter.isFavorite = true;
+        } else if (req.query.source === "custom") {
+            filter.source = "custom"
+        } else {
+            filter.$or = [
+                { source: "custom" },
+                { isFavorite: true }
+            ];
+        }
+
+        const allFood = await Food.find(filter);
         res.status(200).json(allFood);
 
     } catch (e) {
