@@ -109,7 +109,7 @@ const update = async (req, res) => {
             _id: req.params.foodId,
             user: req.user._id,
             source: "custom",
-        }, foodData, { new: true, runValidators: true }); // I will later change {new: true} to {returnDocument: "after"} as mongoose suggest in my terminal since {new: true} will be deleted
+        }, foodData, { returnDocument: "after", runValidators: true });
 
         if (!updatedFood) return res.status(404).json({ err: "Custom food not found" });
 
@@ -139,7 +139,7 @@ const deleteFood = async (req, res) => {
 const toggleFavorite = async (req, res) => {
     try {
         if (typeof req.body.isFavorite !== "boolean")
-            return res.stats(400).json({ err: "isFavorite must be true or false" });
+            return res.status(400).json({ err: "isFavorite must be true or false" });
 
         const updateFood = await Food.findOneAndUpdate({
             _id: req.params.foodId,

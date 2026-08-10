@@ -185,8 +185,9 @@ const summary = async (req, res) => {
     try {
         const startDate = req.query.startDate;
         const endDate = req.query.endDate;
+        const today = req.query.today;
 
-        if (!startDate || !endDate) return res.status(400).json({ err: "Start and end date are required" });
+        if (!startDate || !endDate || !today) return res.status(400).json({ err: "Start, end , and todays's date are required" });
 
         const summaryData = await FoodLogEntry.aggregate([
             {
@@ -238,7 +239,6 @@ const summary = async (req, res) => {
         }
 
         const user = await User.findById(req.user._id);
-        const today = req.query.today;
         const todayDateMacros = summaryData.find(day => day._id === today);
 
         const todayConsumed = {
