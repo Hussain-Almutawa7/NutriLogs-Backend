@@ -68,7 +68,12 @@ const show = async (req, res) => {
     try {
         const foundFood = await Food.findOne({
             _id: req.params.foodId,
-            user: req.user._id
+            user: req.user._id,
+
+            $or: [
+                { source: "custom" },
+                { isFavorite: true }
+            ]
         });
 
         if (!foundFood) return res.status(404).json({ err: "Food not found" });
