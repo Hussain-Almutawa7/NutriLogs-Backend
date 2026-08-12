@@ -42,14 +42,11 @@ const create = async (req, res) => {
             return res.status(400).json({ err: "Food ID or external ID is required" });
         }
 
-
         const consumedAmount = Number(req.body.consumedAmount);
         const consumedUnit = req.body.consumedUnit;
 
-        // isFinite is something new, it checks NaN Infinity and -Infinity
         if (!Number.isFinite(consumedAmount) || consumedAmount <= 0) return res.status(400).json({ err: "Consumed amount must be greater than 0" });
 
-        // Maybe later I will handle unit conversion but for now will keep it simple
         if (consumedUnit !== food.servingUnit) return res.status(400).json({ err: `Consumed unit must be ${food.servingUnit}` });
 
         const multiplier = consumedAmount / food.servingAmount;
@@ -125,10 +122,8 @@ const update = async (req, res) => {
         const consumedAmount = Number(req.body.consumedAmount);
         const consumedUnit = req.body.consumedUnit;
 
-        // isFinite is something new, it checks NaN Infinity and -Infinity
         if (!Number.isFinite(consumedAmount) || consumedAmount <= 0) return res.status(400).json({ err: "Consumed amount must be greater than 0" });
 
-        // Maybe later I will handle unit conversion but for now will keep it simple
         if (consumedUnit !== foundEntry.baseUnit) return res.status(400).json({ err: `Consumed unit must be ${foundEntry.baseUnit}` });
 
         const multiplier = consumedAmount / foundEntry.baseAmount;

@@ -33,7 +33,6 @@ function getNutrientValues(nutrients, nutrientId) {
     return nutrient ? nutrient.value : null;
 }
 
-// Helper function for foodDetails instead of writing .find() 4 times
 function getNutrientFoodDetailsValues(nutrients, nutrientId) {
     const nutrient = nutrients.find(nutrient => nutrient.nutrient.id === nutrientId);
 

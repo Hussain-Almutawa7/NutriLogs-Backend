@@ -38,7 +38,7 @@ app.post("/api/foods/import", verifyToken, foodCtrl.importFoodFromApi);
 app.get("/api/foods/:foodId", verifyToken, foodCtrl.show);
 app.put("/api/foods/:foodId", verifyToken, foodCtrl.update);
 app.delete("/api/foods/:foodId", verifyToken, foodCtrl.deleteFood);
-app.patch("/api/foods/:foodId/favorite", verifyToken, foodCtrl.toggleFavorite); // PUT will work but I used patch since it is the best practice for partial updates
+app.patch("/api/foods/:foodId/favorite", verifyToken, foodCtrl.toggleFavorite);
 
 // FOOD LOGS ROUTES
 app.get("/api/food-logs", verifyToken, foodLogCtrl.index);

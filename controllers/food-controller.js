@@ -151,7 +151,7 @@ const toggleFavorite = async (req, res) => {
             user: req.user._id,
         }, {
             isFavorite: req.body.isFavorite
-        }, { new: true, runValidators: true }); // I will later change {new: true} to {returnDocument: "after"} as mongoose suggest in my terminal since {new: true} will be deleted
+        }, { returnDocument: "after", runValidators: true });
 
         if (!updateFood) return res.status(404).json({ err: "Food not found" });
 
